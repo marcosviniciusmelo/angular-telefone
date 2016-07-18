@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-br" ng-app="listaTelefonica">
+<head>
+	<meta charset="UTF-8">
+	<title>Angular</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	<meta charset="utf8">
+	<script type="text/javascript" src="lib/angular/angular.js"></script>
+	<script type="text/javascript" src="lib/angular/angular-locale_pt-br.js"></script>
+
+	<script>
+		angular.module("listaTelefonica", []);
+		angular.module("listaTelefonica").controller("listaTelefonicaCtrl", function($scope){
+			$scope.nome = "Teste";
+			$scope.contatos = [
+				{nome: "Marcos", telefone: "88888", data: new Date() },
+				{nome: "Vini", telefone: "7777", data: new Date() },
+				{nome: "Glauter", telefone: "666", data: new Date() }
+			];
+
+			$scope.adicionarContato = function(contato){
+				$scope.contatos.push(angular.copy(contato));
+				delete $scope.contato;
+			};
+
+			$scope.apagarContato = function(contatos){
+				$scope.contatos = contatos.filter(function(contato){
+					if (!contato.selecionado) return contato;
+				});
+			};
+
+		});
+	</script>
+
+	<style>
+		.jumbotron{
+			width: 600px;
+			margin: 0 auto;
+			margin-top: 20px;
+			padding: 20px;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+		}
+
+		.form-control{
+			margin-bottom: 10px;
+		}
+	</style>
+</head>
+<body>
+
+	<div class="jumbotron" ng-controller="listaTelefonicaCtrl">
+		<h4>{{nome}}</h4>
+
+		<input class="form-control" type="text" ng-model="criterioBusca" placeholder="Busca">
+
+		<table class="table table-striped">
+			<tr>
+				<th></th>
+				<th>Nome</th>
+				<th>Telefone</th>
+				<th>Data</th>
+			</tr>
+			<tr ng-repeat="contato in contatos | filter: {nome: criterioBusca}">
+				<td><input type="checkbox" ng-model="contato.selecionado"></td>
+				<td>{{contato.nome}}</td>
+				<td>{{contato.telefone}}</td>
+				<td>{{contato.data | date: 'dd/MM/yyyy hh:mm'}}</td>
+			</tr>
+		</table>
+
+		<input class="form-control" type="text" ng-model="contato.nome" placeholder="Nome">
+		<input class="form-control" type="text" ng-model="contato.telefone" placeholder="Telefone">
+		<button class="btn btn-primary btn-block" ng-click="adicionarContato(contato)" ng-disabled="!contato.nome || !contato.telefone">Adicionar</button>
+		<button class="btn btn-danger btn-block" ng-click="apagarContato(contatos)" ng-disabled="contato.selecionado">Apagar</button>
+
+
+	</div>
+	
+</body>
+</html>
